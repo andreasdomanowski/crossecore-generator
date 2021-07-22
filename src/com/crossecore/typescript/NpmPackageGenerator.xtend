@@ -48,7 +48,7 @@ class NpmPackageGenerator extends EcoreVisitor{
 		  	"crossecore": "^0.3.0"
 		  },
 		  "devDependencies": {
-		    "typescript": "~3.5.2",
+		    "typescript": "^4.3.5"
 		  	"jest": "^24.8.0"
 		  }
 		}
