@@ -59,7 +59,8 @@ class ModelGenerator extends EcoreVisitor{
 		eclassifiers.addAll(epackage.EClassifiers.filter[e|e instanceof EEnum]);
 		
 		for(EClassifier classifier: eclassifiers){
-			tt.clearImports;
+			tt.clearImports
+			tt.setCurrentClassifier(classifier)
 			var body = 	
 			'''
 			«doSwitch(classifier)»
@@ -71,6 +72,7 @@ class ModelGenerator extends EcoreVisitor{
 			«body»
 			'''
 			write(classifier, contents);
+			tt.clearCurrentClassifier
 		}
 		
 		return "";
