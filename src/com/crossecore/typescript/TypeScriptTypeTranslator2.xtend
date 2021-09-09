@@ -37,13 +37,26 @@ import org.eclipse.ocl.ecore.PrimitiveType
 import org.eclipse.ocl.ecore.SequenceType
 import org.eclipse.ocl.ecore.SetType
 import org.eclipse.emf.ecore.EDataType
+import com.crossecore.Utils
 
 class TypeScriptTypeTranslator2 {
+	
+	// the classifier, which the code is currently generated for
+	EClassifier currentClassifier = null;
 
 	HashMap<EPackage, Set<String>> packages2 = new HashMap<EPackage, Set<String>>();
 
 	def clearImports() {
 		packages2.clear;
+	}
+	
+	
+	def clearCurrentClassifier() {
+		currentClassifier = null;
+	}
+
+	def setCurrentClassifier(EClassifier classifier){
+		currentClassifier = classifier;
 	}
 
 	def void import_(EPackage context, EPackage epackage, String name) {
@@ -82,19 +95,17 @@ class TypeScriptTypeTranslator2 {
 			Arrays.sort(list);
 
 			for (String name : list) {
-				
-				result.append('''import {«name»} from "«epackage.name»/«name»";'''+"\n");
-				
-				/*
-				if(!Utils.isEqual(epackage,self_) && Utils.isEcoreEPackage(epackage)){
-					result.append('''import {«name»} from "crossecore";''');
-					result.append("\n");
-				}else{
-					result.append('''import {«name»} from "«epackage.name»/«name»";''');
-					result.append("\n");	
-				}
-				*/
-					
+				// add import only iff the TypeScript class which is currently under construction does not match the class, which is to be imported
+				if(!name.equals(currentClassifier === null ? null : currentClassifier.name)){
+					// if the package which is to be imported is part of the crossecore-lib, import it directly from node_modules
+					if(Utils.isEcoreEPackage(epackage)){
+						result.append('''import {«name»} from "crossecore";'''+"\n");
+					}
+					// otherwise, resolve it via tsconfig/paths
+					else{
+						result.append('''import {«name»} from "«epackage.name»/«name»";'''+"\n");
+					}
+				}					
 			}
 
 		}

@@ -20,6 +20,7 @@ package com.crossecore.typescript;
 
 import com.crossecore.EcoreVisitor
 import org.eclipse.emf.ecore.EPackage
+import com.crossecore.Utils
 
 class NpmPackageGenerator extends EcoreVisitor{
 	
@@ -33,23 +34,46 @@ class NpmPackageGenerator extends EcoreVisitor{
 	
 	override caseEPackage(EPackage epackage){
 		
+		val dependencies = Utils.getDependencies(epackage)
 		return 
 		'''
 		{
-		  "name": "«epackage.name»",
+		  "name": "morecomplexmodel",
 		  "version": "1.0.0",
 		  "scripts": {
-		    "build": "tsc -p .",
-		    "test": "jest"
+		    "test": "jest",
+		    "build": "webpack",
+		    "start:dev": "webpack serve --open --mode production"
 		  },
-		  "main": "lib/index.js",
+		  "files": ["dist"],
+		  "main": "dist/morecomplexmodel.js",
 		  "private": true,
 		  "dependencies": {
-		  	"crossecore": "^0.1.0"
+		  	"crossecore": "^0.3.0"
 		  },
 		  "devDependencies": {
-		    "typescript": "~3.5.2",
-		  	"jest": "^24.8.0"
+		    "@types/backbone": "^1.4.11",
+		    "@types/jest": "^27.0.1",
+		    "bootstrap": "^4.6.0",
+		    "crossecore": "^0.3.0",
+		    "css-loader": "^5.2.1",
+		    "html-webpack-plugin": "^5.3.1",
+		    "jest": "^26.6.3",
+		    "jointjs": "^3.3.1",
+		    "jquery": "^3.5.1",
+		    "jsdom": "^17.0.0",
+		    "popper.js": "^1.16.1",
+		    "style-loader": "^2.0.0",
+		    "touch": "^3.1.0",
+		    "ts-jest": "^26.5.6",
+		    "ts-loader": "^9.2.4",
+		    "tsconfig-paths-webpack-plugin": "^3.5.1",
+		    "tslib": "^2.2.0",
+		    "typescript": "^4.2.4",
+		    "webpack": "^5.47.0",
+		    "webpack-cli": "^4.7.2",
+		    "webpack-dev-server": "^4.0.0",
+		    "xmldom": "^0.6.0"
 		  }
 		}
 		'''

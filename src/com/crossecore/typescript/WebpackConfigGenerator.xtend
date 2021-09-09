@@ -18,11 +18,10 @@
  */
 package com.crossecore.typescript;
 
-import org.eclipse.emf.ecore.EPackage
 import com.crossecore.EcoreVisitor
-import com.crossecore.Utils
+import org.eclipse.emf.ecore.EPackage
 
-class TSConfigGenerator extends EcoreVisitor{
+class WebpackConfigGenerator extends EcoreVisitor{
 	
 	
 	
@@ -33,37 +32,43 @@ class TSConfigGenerator extends EcoreVisitor{
 
 	
 	override caseEPackage(EPackage epackage){
-		
-
-		
-		val dependencies = Utils.getDependencies(epackage)
-		
-		return 
+		return
 		'''
-		{
-		  "compileOnSave": false,
-		  "compilerOptions": {
-		    "baseUrl": "./",
-		    "paths": {
-		      «FOR EPackage d : dependencies»
-		      "«d.name»/*": ["node_modules/«d.name»/typings/*"],
-		      «ENDFOR»
-		      "«epackage.name»/*": ["./src/*"]
-		    },    
-		    "sourceMap": true,
-		    "module": "ESNext",
-		    "moduleResolution": "Node",
-		    "esModuleInterop": true,
-		    "target": "es5",
-		    "lib": [
-		      "es2017",
-		      "dom"
-		    ]
-		  },
-		  "exclude": [
-		    "node_modules"
-		  ]
-		}
+		const path = require('path');
+		const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+		const HtmlWebpackPlugin = require('html-webpack-plugin');
+		
+		module.exports = {
+		    entry: './src/index.ts',
+		    module: {
+		        rules: [
+		            {
+		                test: /\.tsx?$/,
+		                use: 'ts-loader',
+		                exclude: /node_modules/,
+		            },
+		        ],
+		    },
+		    resolve: {
+		        extensions: ['.ts', '.tsx', '.js'],
+		        plugins: [new TsconfigPathsPlugin({})]
+		    },
+		    output: {
+		        filename: '«epackage.name».js',
+		        path: path.resolve(__dirname, 'dist'),
+		    },
+		    devServer: {
+		        compress: true,
+		        port: 9000,
+		    },
+		    devtool: "source-map",
+			plugins: [
+			    new HtmlWebpackPlugin({
+			        title: 'Title',
+			        template: './src/editorMarkup/index.html',
+			    })
+			    ]        
+		};
 		'''
 	}
 	
