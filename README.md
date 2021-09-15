@@ -1,5 +1,8 @@
 ![Java CI](https://github.com/crossecore/crossecore-generator/workflows/Java%20CI/badge.svg?branch=master)
 
+# About
+This is a fork of CrossEcore's [crossecore-generator](https://github.com/crossecore/crossecore-generator). It aims at generating a custom TypeScript implementation integrating with [eaSirius](https://github.com/andreasdomanowski/eaSirius/). Therefore, it generates a ```package.json``` project description that already includes all dependencies and scripts necessary for editor generation.
+
 # Build from source
 ```bash
 ./gradlew customFatJar
